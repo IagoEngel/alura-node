@@ -4,6 +4,7 @@ import LivroController from "../controllers/livrosController.js";
 const router = express.Router();
 
 router.get("/livros", LivroController.listarLivros)
+    .get("/livros/busca", LivroController.listarLivroPorEditora) /*se colocar na próxima linha, ele espera o campo de id na requisição*/
     .get("/livros/:id", LivroController.listarLivroPorId)
     .post("/livros", LivroController.cadastrarLivro)
     .put("/livros/:id", LivroController.atualizarLivro)
