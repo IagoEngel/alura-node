@@ -8,8 +8,8 @@ const routes = (app) => {
   });
 
   app.use(
-    express.json(),
-    livros,
+    express.json(), // express.json(): esse é um middleware nativo do Express que converte os dados de uma requisição para o formato JSON;
+    livros, // roteador que pode ser utilizado como middleware
   );
 
   app.use(
