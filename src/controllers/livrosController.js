@@ -1,14 +1,15 @@
 import NaoEncontrado from "../erros/NaoEncontrado.js";
+// import RequisicaoIncorreta from "../erros/RequisicaoIncorreta.js";
 import { autores, livros } from "../models/index.js";
 
 class LivroController {
   static listarLivros = async (req, res, next) => {
     try {
-      const livrosResultado = await livros.find()
-        .populate("autor")
-        .exec();
+      const buscaLivros = livros.find();
 
-      res.status(200).json(livrosResultado);
+      req.resultado = buscaLivros;
+
+      next();
     } catch (error) {
       next(error);
     }
@@ -18,9 +19,12 @@ class LivroController {
     try {
       const id = req.params.id;
 
-      const livrosResultado = await livros.findById(id)
-        .populate("autor", "nome" /*<--json de resposta só vai ter o id e o nome do autor*/)
-        .exec();
+      // const livrosResultado = await livros.findById(id)
+      //   .populate("autor", "nome" /*<--json de resposta só vai ter o id e o nome do autor*/)
+      //   .exec(); // <-- exec() se torna opcional quando utiliza async/await
+      const livrosResultado = await livros
+        .findById(id, {}, { autopopulate: false })
+        .populate("autor");
 
       if (livrosResultado != null) {
         res.status(200).send(livrosResultado);
@@ -85,11 +89,12 @@ class LivroController {
       const busca = await processaBusca(req.query);
 
       if (busca !== null) {
-        const livrosResultado = await livros
-          .find(busca)
-          .populate("autor");
+        const livrosResultado = livros
+          .find(busca);
 
-        res.status(200).send(livrosResultado);
+        req.resultado = livrosResultado;
+
+        next();
       } else {
         res.status(200).send([]);
       }
