@@ -1,5 +1,5 @@
 import NaoEncontrado from "../erros/NaoEncontrado.js";
-import livros from "../models/Livro.js";
+import { livros } from "../models/index.js";
 
 class LivroController {
   static listarLivros = async (req, res, next) => {
@@ -52,7 +52,7 @@ class LivroController {
 
       const livroResultado = await livros.findByIdAndUpdate(id, { $set: req.body });
 
-      if (livroResultado != null) {        
+      if (livroResultado != null) {
         res.status(200).send({ message: "Livro atualizado com sucesso" });
       } else {
         next(new NaoEncontrado("Id do Livro não localizado."));
